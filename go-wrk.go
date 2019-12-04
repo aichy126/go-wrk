@@ -39,23 +39,23 @@ var caCert string
 var http2 bool
 
 func init() {
-	flag.BoolVar(&versionFlag, "v", false, "Print version details")
-	flag.BoolVar(&allowRedirectsFlag, "redir", false, "Allow Redirects")
-	flag.BoolVar(&helpFlag, "help", false, "Print help")
-	flag.BoolVar(&disableCompression, "no-c", false, "Disable Compression - Prevents sending the \"Accept-Encoding: gzip\" header")
-	flag.BoolVar(&disableKeepAlive, "no-ka", false, "Disable KeepAlive - prevents re-use of TCP connections between different HTTP requests")
-	flag.IntVar(&goroutines, "c", 10, "Number of goroutines to use (concurrent connections)")
-	flag.IntVar(&duration, "d", 10, "Duration of test in seconds")
+	flag.BoolVar(&versionFlag, "v", false, "版本")
+	flag.BoolVar(&allowRedirectsFlag, "redir", false, "允许重定向")
+	flag.BoolVar(&helpFlag, "help", false, "帮助")
+	flag.BoolVar(&disableCompression, "no-c", false, "禁用压缩可以防止发送\"接受编码:gzip\"标头")
+	flag.BoolVar(&disableKeepAlive, "no-ka", false, "禁用Keep Alive可以防止重新使用不同HTTP请求之间的TCP连接")
+	flag.IntVar(&goroutines, "c", 10, "要使用的goroutine数量(并发连接)")
+	flag.IntVar(&duration, "d", 10, "测试持续时间(秒)")
 	flag.IntVar(&timeoutms, "T", 1000, "Socket/request timeout in ms")
 	flag.StringVar(&method, "M", "GET", "HTTP method")
 	flag.StringVar(&host, "host", "", "Host Header")
-	flag.StringVar(&headerStr, "H", "", "header line, joined with ';'")
-	flag.StringVar(&playbackFile, "f", "<empty>", "Playback file name")
-	flag.StringVar(&reqBody, "body", "", "request body string or @filename")
-	flag.StringVar(&clientCert, "cert", "", "CA certificate file to verify peer against (SSL/TLS)")
-	flag.StringVar(&clientKey, "key", "", "Private key file name (SSL/TLS")
-	flag.StringVar(&caCert, "ca", "", "CA file to verify peer against (SSL/TLS)")
-	flag.BoolVar(&http2, "http", true, "Use HTTP/2")
+	flag.StringVar(&headerStr, "H", "", "请求头信息, 多个使用';'隔断")
+	flag.StringVar(&playbackFile, "f", "<empty>", "URL列表文件名")
+	flag.StringVar(&reqBody, "body", "", "请求主体的字符串 或者 @文件名")
+	flag.StringVar(&clientCert, "cert", "", "要验证对等点的CA证书文件 (SSL/TLS)")
+	flag.StringVar(&clientKey, "key", "", "私钥文件名(SSL/TLS")
+	flag.StringVar(&caCert, "ca", "", "要验证对等点的CA文件 (SSL/TLS)")
+	flag.BoolVar(&http2, "http", true, "使用 HTTP/2")
 }
 
 //printDefaults a nicer format for the defaults
@@ -99,6 +99,10 @@ func main() {
 			os.Exit(1)
 		}
 		testUrl = string(url)
+		//aitodo
+		//去掉文件内换行  这个后面改成lua 的话就可以干掉了
+		loadUrls := strings.Split(testUrl, "\n")
+		testUrl = loadUrls[0]
 	} else {
 		testUrl = flag.Arg(0)
 	}
@@ -123,6 +127,7 @@ func main() {
 		reqBody = string(data)
 	}
 
+	//单一url 测试
 	loadGen := loader.NewLoadCfg(duration, goroutines, testUrl, reqBody, method, host, header, statsAggregator, timeoutms,
 		allowRedirectsFlag, disableCompression, disableKeepAlive, clientCert, clientKey, caCert, http2)
 

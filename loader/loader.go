@@ -106,7 +106,6 @@ func DoRequest(httpClient *http.Client, header map[string]string, method, host, 
 	duration = -1
 
 	loadUrl = escapeUrlStr(loadUrl)
-
 	var buf io.Reader
 	if len(reqBody) > 0 {
 		buf = bytes.NewBufferString(reqBody)
