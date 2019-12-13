@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/aichy126/go-wrk/util"
 	"github.com/davecgh/go-spew/spew"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -8,6 +9,7 @@ import (
 func main() {
 	L := lua.NewState()
 	defer L.Close()
+	L.SetGlobal("RandInt", L.NewFunction(util.RandInt))
 	if err := L.DoFile("demo.lua"); err != nil {
 		panic(err)
 	}
