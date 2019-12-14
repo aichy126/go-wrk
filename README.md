@@ -1,6 +1,6 @@
 go-wrk - an HTTP benchmarking tool
 ==================================
-
+### 项目开发中 将原有 go-wrk 中加入lua脚本实现更复杂的压测方式
 
 
     go get github.com/aichy126/go-wrk
